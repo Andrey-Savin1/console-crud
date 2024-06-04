@@ -1,4 +1,4 @@
-package ru.andrey.crud.Utils;
+package ru.andrey.crud.utils;
 
 import com.google.gson.Gson;
 

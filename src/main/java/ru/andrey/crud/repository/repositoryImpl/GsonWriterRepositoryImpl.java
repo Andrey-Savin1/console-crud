@@ -2,7 +2,7 @@ package ru.andrey.crud.repository.repositoryImpl;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ru.andrey.crud.Utils.Util;
+import ru.andrey.crud.utils.Util;
 import ru.andrey.crud.model.Writer;
 import ru.andrey.crud.repository.PostRepository;
 import ru.andrey.crud.repository.WriterRepository;
