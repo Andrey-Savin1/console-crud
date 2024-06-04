@@ -1,6 +1,5 @@
 package ru.andrey.crud.controller;
 
-
 import ru.andrey.crud.model.Label;
 import ru.andrey.crud.model.Status;
 import ru.andrey.crud.repository.repositoryImpl.GsonLabelRepositoryImpl;

@@ -2,18 +2,19 @@ package ru.andrey.crud.repository.repositoryImpl;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import ru.andrey.crud.model.Label;
 import ru.andrey.crud.utils.Util;
 import ru.andrey.crud.model.Writer;
 import ru.andrey.crud.repository.PostRepository;
 import ru.andrey.crud.repository.WriterRepository;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 public class GsonWriterRepositoryImpl implements WriterRepository {
 
@@ -24,7 +25,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
 
 
     private long writerIdCounter = 1;
-    private final String PATH_WRITERS = "src/main/resources/writers.json";
+    private final String PATH = "src/main/resources/writers.json";
 
 
     @Override
@@ -35,7 +36,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
         writerIdCounter++;
 
         listWriters.add(writer);
-        util.writeToFile(listWriters, PATH_WRITERS);
+        util.writeToFile(listWriters, PATH);
 
         return writer;
     }
@@ -59,7 +60,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
 
         var listWriters = getAllInternal();
         listWriters.removeIf(writer -> id.equals(writer.getId()));
-        util.writeToFile(listWriters, PATH_WRITERS);
+        util.writeToFile(listWriters, PATH);
 
     }
 
@@ -81,19 +82,18 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
             } else return t;
         }).toList();
 
-        util.writeToFile(result, PATH_WRITERS);
+        util.writeToFile(result, PATH);
         return writer;
     }
 
-    public List<Writer> getAllInternal() {
-        try (Scanner scanner = new Scanner(new FileReader(PATH_WRITERS))) {
+    private List<Writer> getAllInternal() {
 
-            if (scanner.hasNextLine()) {
-                Type listType = new TypeToken<List<Writer>>() {}.getType();
-                return gson.fromJson(scanner.next(), listType);
-            }
-            return new ArrayList<>();
-        } catch (FileNotFoundException e) {
+        try (Reader reader = new FileReader(PATH)) {
+            Type listType = new TypeToken<ArrayList<Label>>() {
+            }.getType();
+
+            return gson.fromJson(reader, listType);
+        } catch (IOException e) {
             return Collections.emptyList();
         }
     }
