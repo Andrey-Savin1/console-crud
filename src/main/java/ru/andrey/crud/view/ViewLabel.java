@@ -42,8 +42,6 @@ public class ViewLabel {
                 } while (!scanner.nextLine().equals("2"));
             }
         } while (!line.equals("6"));
-        StartMenuView startMenuView = new StartMenuView();
-        startMenuView.startMenu();
     }
 
     private void menu() {

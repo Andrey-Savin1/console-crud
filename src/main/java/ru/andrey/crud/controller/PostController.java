@@ -3,35 +3,34 @@ package ru.andrey.crud.controller;
 import ru.andrey.crud.model.Label;
 import ru.andrey.crud.model.Post;
 import ru.andrey.crud.model.Status;
-import ru.andrey.crud.repository.repositoryImpl.GsonPostRepositoryImpl;
 import ru.andrey.crud.repository.PostRepository;
+import ru.andrey.crud.repository.repositoryImpl.GsonPostRepositoryImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PostController {
 
     private final PostRepository postRepository = new GsonPostRepositoryImpl();
 
-    public Post createPost(String title, String content) {
+    public Post createPost(String title, String content, List<Label> labels) {
 
         Post post = new Post();
 
         post.setTitle(title);
         post.setContent(content);
-        post.setLabels(new ArrayList<>());
+        post.setLabels(labels);
         post.setStatus(Status.ACTIVE);
 
         return postRepository.create(post);
     }
 
-    public Post updatePost(Long postId, String title, String content) {
+    public Post updatePost(Long postId, String title, String content, List<Label> labels) {
         Post post = new Post();
 
         post.setId(postId);
         post.setTitle(title);
         post.setContent(content);
-        post.setLabels(new ArrayList<>());
+        post.setLabels(labels);
         post.setStatus(Status.ACTIVE);
 
         return postRepository.update(post);
@@ -49,20 +48,4 @@ public class PostController {
         return postRepository.getAll();
     }
 
-    public Post addLabel(Long id, String name) {
-
-        Post post = postRepository.getById(id);
-
-        Label label = new Label();
-
-        label.setName(name);
-        label.setStatus(Status.ACTIVE);
-        if (post.getLabels() == null){
-            post.setLabels(new ArrayList<>());
-        }
-        post.getLabels().add(label);
-
-        return postRepository.update(post);
-
-    }
 }

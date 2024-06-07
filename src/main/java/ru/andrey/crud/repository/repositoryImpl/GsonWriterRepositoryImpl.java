@@ -1,28 +1,17 @@
 package ru.andrey.crud.repository.repositoryImpl;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import ru.andrey.crud.model.Label;
-import ru.andrey.crud.utils.Util;
 import ru.andrey.crud.model.Writer;
 import ru.andrey.crud.repository.PostRepository;
 import ru.andrey.crud.repository.WriterRepository;
+import ru.andrey.crud.utils.Util;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GsonWriterRepositoryImpl implements WriterRepository {
 
 
-    private final Util<Writer> util = new Util<>();
-    private final Gson gson = new Gson();
+    private final Util<Writer> util = new Util<>(Writer.class);
     private final PostRepository postRepository = new GsonPostRepositoryImpl();
-
 
     private long writerIdCounter = 1;
     private final String PATH = "src/main/resources/writers.json";
@@ -31,12 +20,12 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
     @Override
     public Writer create(Writer writer) {
 
-        var listWriters = getAllInternal();
+        var listWriters = util.getAllInternal(PATH);
         writer.setId(writerIdCounter);
         writerIdCounter++;
 
         listWriters.add(writer);
-        util.writeToFile(listWriters, PATH);
+        Util.writeToFile(listWriters, PATH);
 
         return writer;
     }
@@ -44,7 +33,7 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
     @Override
     public Writer getById(Long id) {
 
-        return getAllInternal().stream()
+        return util.getAllInternal(PATH).stream()
                 .filter(f -> f.getId().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -52,21 +41,21 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
 
     @Override
     public List<Writer> getAll() {
-        return getAllInternal();
+        return util.getAllInternal(PATH);
     }
 
     @Override
     public void deleteById(Long id) {
 
-        var listWriters = getAllInternal();
+        var listWriters = util.getAllInternal(PATH);
         listWriters.removeIf(writer -> id.equals(writer.getId()));
-        util.writeToFile(listWriters, PATH);
+        Util.writeToFile(listWriters, PATH);
 
     }
 
     @Override
     public Writer update(Writer writer) {
-        var listWriters = getAllInternal();
+        var listWriters = util.getAllInternal(PATH);
 
         var result = listWriters.stream().map(t -> {
             if (t.getId().equals(writer.getId())) {
@@ -82,22 +71,11 @@ public class GsonWriterRepositoryImpl implements WriterRepository {
             } else return t;
         }).toList();
 
-        util.writeToFile(result, PATH);
+        Util.writeToFile(result, PATH);
         return writer;
     }
-
-    private List<Writer> getAllInternal() {
-
-        try (Reader reader = new FileReader(PATH)) {
-            Type listType = new TypeToken<ArrayList<Label>>() {
-            }.getType();
-
-            return gson.fromJson(reader, listType);
-        } catch (IOException e) {
-            return Collections.emptyList();
-        }
-    }
 }
+
 
 
 

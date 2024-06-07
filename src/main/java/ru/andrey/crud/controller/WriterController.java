@@ -3,8 +3,8 @@ package ru.andrey.crud.controller;
 import ru.andrey.crud.model.Post;
 import ru.andrey.crud.model.Status;
 import ru.andrey.crud.model.Writer;
-import ru.andrey.crud.repository.repositoryImpl.GsonWriterRepositoryImpl;
 import ru.andrey.crud.repository.WriterRepository;
+import ru.andrey.crud.repository.repositoryImpl.GsonWriterRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,20 +13,19 @@ public class WriterController {
 
     private final WriterRepository writerRepository = new GsonWriterRepositoryImpl();
 
-
-    public Writer createWriter(String firstName, String lastName) {
+    public Writer createWriter(String firstName, String lastName, List<Post> posts) {
 
         Writer writer = new Writer();
 
         writer.setFirstName(firstName);
         writer.setLastName(lastName);
-        writer.setPosts(new ArrayList<>());
+        writer.setPosts(posts);
         writer.setStatus(Status.ACTIVE);
 
         return writerRepository.create(writer);
     }
 
-    public Writer updateWriter(Long writerId, String firstName, String lastName) {
+    public Writer updateWriter(Long writerId, String firstName, String lastName, List<Post> posts) {
 
         Writer writer = new Writer();
 
@@ -34,7 +33,7 @@ public class WriterController {
         writer.setStatus(Status.ACTIVE);
         writer.setFirstName(firstName);
         writer.setLastName(lastName);
-        writer.setPosts(new ArrayList<>());
+        writer.setPosts(posts);
 
         return writerRepository.update(writer);
     }
